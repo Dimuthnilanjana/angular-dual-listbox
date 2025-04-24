@@ -1,0 +1,40 @@
+<div class="demo-container">
+  <header class="demo-header">
+    <h1>Angular Dual List Box</h1>
+    <p>A flexible, customizable dual list box component for Angular applications</p>
+  </header>
+  
+  <div class="demo-content">
+    <app-dual-list-box
+      [sourceItems]="sourceItems"
+      [targetItems]="targetItems"
+      sourceTitle="Available Items"
+      targetTitle="Selected Items"
+      (sourceChange)="onSourceChange($event)"
+      (targetChange)="onTargetChange($event)"
+    ></app-dual-list-box>
+  </div>
+  
+  <div class="demo-info">
+    <div class="info-section">
+      <h2>How to use</h2>
+      <p>
+        Select items from the left list and click the arrow buttons to move them to the right list.
+        You can also use the search feature to filter items in either list.
+      </p>
+      <p>
+        <strong>Tip:</strong> Hold Ctrl (or Cmd on Mac) while clicking to select multiple items.
+      </p>
+    </div>
+    
+    <div class="info-section">
+      <h2>Selected Items</h2>
+      <div class="selected-items">
+        <div *ngIf="targetItems.length === 0" class="no-items">No items selected</div>
+        <ul *ngIf="targetItems.length > 0">
+          <li *ngFor="let item of targetItems">{{ item.name }} ({{ item.category }})</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
