@@ -1,0 +1,155 @@
+<div class="dual-list-box" [class.disabled]="disabled">
+  <!-- Source List -->
+  <div 
+    class="list-container"
+    (dragover)="onDragOver($event, 'source')"
+    (drop)="onDrop($event, 'source')"
+  >
+    <div class="list-header">
+      <h3 class="list-title">{{ sourceTitle }}</h3>
+      <div class="item-count">{{ filteredSourceItems.length }} items</div>
+    </div>
+    
+    <!-- Search input for source list -->
+    <div class="search-container" *ngIf="showSearch">
+      <input 
+        type="text" 
+        class="search-input" 
+        [(ngModel)]="sourceSearchText"
+        (input)="onSourceSearchChange()"
+        placeholder="Search..."
+        [disabled]="disabled"
+      >
+      <button 
+        *ngIf="sourceSearchText" 
+        class="clear-search" 
+        (click)="clearSourceSearch()"
+        [disabled]="disabled"
+      >
+        ✕
+      </button>
+    </div>
+    
+    <!-- Source list items -->
+    <div class="list-content" [class.no-search]="!showSearch">
+      <div 
+        *ngFor="let item of filteredSourceItems; trackBy: trackByFn" 
+        class="list-item" 
+        [class.selected]="isSourceItemSelected(item)"
+        [class.dragging]="isDragged(item)"
+        (click)="toggleSourceSelection(item, $event)"
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        (dragend)="onDragEnd()"
+      >
+        <!-- Use custom template if provided, otherwise use default -->
+        <ng-container *ngIf="itemTemplate; else defaultTemplate">
+          <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+        <ng-template #defaultTemplate>
+          {{ item[display] }}
+        </ng-template>
+      </div>
+      
+      <!-- Empty state -->
+      <div *ngIf="filteredSourceItems.length === 0" class="empty-list">
+        <p>No items available</p>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Controls -->
+  <div class="controls-container">
+    <button 
+      class="control-button move-right" 
+      [disabled]="disabled || sourceSelectedItems.length === 0"
+      (click)="moveToTarget()"
+      title="Move selected to right"
+    >
+      →
+    </button>
+    <button 
+      class="control-button move-all-right" 
+      [disabled]="disabled || filteredSourceItems.length === 0"
+      (click)="moveAllToTarget()"
+      title="Move all to right"
+    >
+      →→
+    </button>
+    <button 
+      class="control-button move-all-left" 
+      [disabled]="disabled || filteredTargetItems.length === 0"
+      (click)="moveAllToSource()"
+      title="Move all to left"
+    >
+      ←←
+    </button>
+    <button 
+      class="control-button move-left" 
+      [disabled]="disabled || targetSelectedItems.length === 0"
+      (click)="moveToSource()"
+      title="Move selected to left"
+    >
+      ←
+    </button>
+  </div>
+  
+  <!-- Target List -->
+  <div 
+    class="list-container"
+    (dragover)="onDragOver($event, 'target')"
+    (drop)="onDrop($event, 'target')"
+  >
+    <div class="list-header">
+      <h3 class="list-title">{{ targetTitle }}</h3>
+      <div class="item-count">{{ filteredTargetItems.length }} items</div>
+    </div>
+    
+    <!-- Search input for target list -->
+    <div class="search-container" *ngIf="showSearch">
+      <input 
+        type="text" 
+        class="search-input" 
+        [(ngModel)]="targetSearchText"
+        (input)="onTargetSearchChange()"
+        placeholder="Search..."
+        [disabled]="disabled"
+      >
+      <button 
+        *ngIf="targetSearchText" 
+        class="clear-search" 
+        (click)="clearTargetSearch()"
+        [disabled]="disabled"
+      >
+        ✕
+      </button>
+    </div>
+    
+    <!-- Target list items -->
+    <div class="list-content" [class.no-search]="!showSearch">
+      <div 
+        *ngFor="let item of filteredTargetItems; trackBy: trackByFn" 
+        class="list-item" 
+        [class.selected]="isTargetItemSelected(item)"
+        [class.dragging]="isDragged(item)"
+        (click)="toggleTargetSelection(item, $event)"
+        draggable="true"
+        (dragstart)="onDragStart($event, item)"
+        (dragend)="onDragEnd()"
+      >
+        <!-- Use custom template if provided, otherwise use default -->
+        <ng-container *ngIf="itemTemplate; else defaultTargetTemplate">
+          <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+        <ng-template #defaultTargetTemplate>
+          {{ item[display] }}
+        </ng-template>
+      </div>
+      
+      <!-- Empty state -->
+      <div *ngIf="filteredTargetItems.length === 0" class="empty-list">
+        <p>No items selected</p>
+      </div>
+    </div>
+  </div>
+</div>
